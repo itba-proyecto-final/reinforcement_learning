@@ -4,36 +4,62 @@ import numpy as np
 env = gym.make('FrozenLake-v0')
 
 # Initialize Q-table with all zeros
-Q = np.zeros([env.observation_space.n,env.action_space.n])
+Q = np.zeros([env.observation_space.n, env.action_space.n])
 
 # Set learning parameters
-lr = .8
+learning_rate = .8
 y = .95
-num_episodes = 2000
+num_episodes = 5000
 # create lists to contain total rewards and steps per episode
-# jList = []
 rList = []
+"""
+Train the agent
+"""
+accum_rewards = 0
 for i in range(num_episodes):
     # Reset environment and get first new observation
-    s = env.reset()
-    rAll = 0
-    d = False
-    j = 0
+    state = env.reset()
     # The Q-Table learning algorithm
-    while j < 99:
-        j += 1
+    for j in range (100):
         # Choose an action by greedily (with noise) picking from Q table
-        a = np.argmax(Q[s,:] + np.random.randn(1,env.action_space.n)*(1./(i+1)))
+        action = np.argmax(Q[state, :] + np.random.randn(1, env.action_space.n) * (1. / (i + 1)))
         # Get new state and reward from environment
-        s1,r,d,_ = env.step(a)
+        new_state, reward, is_done, _ = env.step(action)
         # Update Q-Table with new knowledge
-        Q[s,a] = Q[s,a] + lr*(r + y*np.max(Q[s1,:]) - Q[s,a])
-        rAll += r
-        s = s1
-        if d == True:
+        Q[state, action] = Q[state, action] + learning_rate * (reward + y * np.max(Q[new_state, :]) - Q[state, action])
+        state = new_state
+        if is_done:
+            accum_rewards += reward
+            # if reward == 1:
+            #     print("You reached a goal :)")
+            # else:
+            #     print("You fell through a hole :(")
             break
-    # jList.append(j)
-    rList.append(rAll)
-print("Score over time: " +  str(sum(rList)/num_episodes))
-# print("Final Q-Table Values")
-# print(Q)
+
+print("Score over time: " + str(accum_rewards/num_episodes))
+print("Final Q-Table Values")
+print(Q)
+print(rList)
+
+"""
+Use trained model
+"""
+all_rewards = 0
+state = env.reset()
+accum_rewards = 0
+
+for i in range(num_episodes):
+    state = env.reset()
+    for j in range(100):
+        action = np.argmax(Q[state, :])
+        state_new, reward, is_done, _ = env.step(action)
+        state = state_new
+        if is_done:
+            # env.render()
+            print(j)
+            print(reward)
+            accum_rewards += reward
+            break
+print("Average score when testing: " + str(accum_rewards/num_episodes))
+
+
