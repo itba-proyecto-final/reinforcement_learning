@@ -33,7 +33,6 @@ class GameRunner:
         while True:
             if self.render:
                 self.env.render()
-
             action = self._choose_action(state)
             next_state, reward, done, info = self.env.step(action)
             if next_state[0] >= 0.1:
