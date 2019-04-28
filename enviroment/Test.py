@@ -1,7 +1,9 @@
 import gym
 import numpy as np
+# import gym_chase
 
 env = gym.make('FrozenLake-v0')
+env = gym.make('chase-v0')
 
 # Initialize Q-table with all zeros
 Q = np.zeros([env.observation_space.n, env.action_space.n])
@@ -55,5 +57,4 @@ for i in range(num_episodes):
             accum_rewards += reward
             break
 print("Average score when testing: " + str(accum_rewards/num_episodes))
-
 
