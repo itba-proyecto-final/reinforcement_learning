@@ -27,8 +27,8 @@ for i in range(num_episodes):
         print("")
         # Choose an action by greedily (with noise) picking from Q table
         # action = np.argmax((Q[state, :] + np.random.randn(1, env.action_space) * (1. / (i + 1))).tolist())
-        sorted_actions = np.argsort(Q[state, :] + np.random.randn(1, env.action_space) * (1. / (i + 1)))
-        for a in sorted_actions[0]:  # Check that we are using a valid action
+        sorted_actions = np.argsort(Q[state, :] + np.random.randn(env.action_space) * (1. / (i + 1)))
+        for a in sorted_actions:  # Check that we are using a valid action
             if env.is_valid_action(a):
                 action = a
                 break
@@ -46,23 +46,23 @@ for i in range(num_episodes):
 print("Final Q-Table Values")
 print(Q)
 print(rList)
-#
-# """
-# Use trained model
-# """
-# all_rewards = 0
-# state = env.reset()
-# accum_rewards = 0
-#
-# for i in range(num_episodes):
-#     state = env.reset()
-#     for j in range(100):
-#         action = np.argmax(Q[state, :])
-#         state_new, reward, is_done, _ = env.step(action)
-#         state = state_new
-#         if is_done:
-#             # env.render()
-#             accum_rewards += reward
-#             break
-# print("Average score when testing: " + str(accum_rewards/num_episodes))
-#
+
+"""
+Use trained model
+"""
+all_rewards = 0
+state = env.reset()
+accum_rewards = 0
+
+for i in range(num_episodes):
+    state = env.reset()
+    for j in range(100):
+        action = np.argmax(Q[state, :])
+        state_new, reward, is_done, _ = env.step(action)
+        state = state_new
+        if is_done:
+            # env.render()
+            accum_rewards += reward
+            break
+print("Average score when testing: " + str(accum_rewards/num_episodes))
+
