@@ -11,7 +11,7 @@ Q = np.zeros([env.observation_space, env.action_space])
 # Set learning parameters
 learning_rate = .8
 y = .95
-num_episodes = 1  # TODO ver que rompe con mas de un episode, elige acciones que no son validas
+num_episodes = 100  # TODO ver que rompe con mas de un episode, elige acciones que no son validas
 # create lists to contain total rewards and steps per episode
 rList = []
 """
@@ -26,12 +26,16 @@ for i in range(num_episodes):
         env.render()
         print("")
         # Choose an action by greedily (with noise) picking from Q table
-        action = np.argmax(Q[state, :] + np.random.randn(1, env.action_space) * (1. / (i + 1)))
-        while not env.is_valid_action(action):  # TODO asegurarse que no entre en loop infinito si por alguna razon acciones invalidas son mejores que las posibles
-            action = np.argmax(Q[state, :] + np.random.randn(1, env.action_space) * (1. / (i + 1)))
-        # Get new state and reward from environment
+        # action = np.argmax((Q[state, :] + np.random.randn(1, env.action_space) * (1. / (i + 1))).tolist())
+        sorted_actions = np.argsort(Q[state, :] + np.random.randn(1, env.action_space) * (1. / (i + 1)))
+        for a in sorted_actions[0]:  # Check that we are using a valid action
+            if env.is_valid_action(a):
+                action = a
+                break
+        # valid_actions = [x for x in [0, 1, 2, 3] if env.is_valid_action(x)]
         new_state, reward, is_done, _ = env.step(action)
         # Update Q-Table with new knowledge
+        # if action in valid_actions:  # Guarantee that the table will only have non-zero values for valid action/states
         Q[state, action] = Q[state, action] + learning_rate * (reward + y * np.max(Q[new_state, :]) - Q[state, action])
         state = new_state
         if is_done:
