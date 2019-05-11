@@ -272,5 +272,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+*.txt
 
 # End of https://www.gitignore.io/api/git,macos,python,windows,intellij
