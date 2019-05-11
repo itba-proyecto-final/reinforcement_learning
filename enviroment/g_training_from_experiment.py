@@ -2,7 +2,7 @@ import gym
 import numpy as np
 import gym_chase
 
-from enviroment.q_learning import write_q_table_file
+from enviroment.q_tools import write_q_table_file
 
 env = gym.make('chase-mental-v0')
 LEARNING_RATE = .2
