@@ -4,8 +4,8 @@ import gym_chase
 
 
 env = gym.make('chase-v0')
-LEARNING_RATE = .8
-Y = .95
+LEARNING_RATE = .2
+Y = .3
 
 
 def write_q_table_file(q_table, q_file="Q_Table.txt"):
@@ -30,7 +30,7 @@ def write_q_table_file(q_table, q_file="Q_Table.txt"):
     file.close()
 
 
-def train_q_algorithm(training_episodes=100, learning_rate=.8, y=.95):
+def train_q_algorithm(training_episodes=300, learning_rate=.8, y=.95):
     """
     Train Q table and return it
     :return: Q Table
@@ -42,9 +42,9 @@ def train_q_algorithm(training_episodes=100, learning_rate=.8, y=.95):
         # Reset environment and get first new observation
         state = env.reset()
         # The Q-Table learning algorithm
-        for j in range(100):
+        for j in range(2000):
             # Choose an action by greedily (with noise) picking from Q table
-            sorted_actions = np.argsort(Q[state, :] + np.random.randn(env.action_space) * (1. / (i + 1)))
+            sorted_actions = reversed(np.argsort(Q[state, :] + np.random.randn(env.action_space) * (1. / (i + 1))))
             for a in sorted_actions:  # Check that we are using a valid action
                 if env.is_valid_action(a):
                     action = a
@@ -54,13 +54,12 @@ def train_q_algorithm(training_episodes=100, learning_rate=.8, y=.95):
             Q[state, action] = Q[state, action] + learning_rate * (reward + y * np.max(Q[new_state, :]) - Q[state, action])
             state = new_state
             if is_done:
-                print(env.number_of_steps)
                 num_steps += env.number_of_steps
                 break
+    write_q_table_file(Q)
     print("Final Q-Table Values")
     print(Q)
     print("Average amount of steps when training:" + str(num_steps/training_episodes))
-    write_q_table_file(Q)
     return Q
 
 
@@ -72,7 +71,7 @@ def test_q_table(q_table, testing_episodes=50):
     for i in range(testing_episodes):
         state = env.reset()
         for j in range(100):
-            sorted_actions = np.argsort(q_table[state, :])
+            sorted_actions = reversed(np.argsort(q_table[state, :]))
             for a in sorted_actions:  # Check that we are using a valid action
                 if env.is_valid_action(a):
                     action = a
