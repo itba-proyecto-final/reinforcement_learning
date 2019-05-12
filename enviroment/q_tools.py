@@ -12,7 +12,7 @@ def write_q_table_file(q_table, q_file="Q_Table.txt"):
     cols = len(q_table[0])
     file.write(str(rows) + "x" + str(cols) + "\n")
     for i in range(len(q_table)):
-        file.write(str(i) + "-" + "13\n")  # TODO: deshardcodear el objetivo del juego
+        file.write(str(i) + "-" + "24\n")  # TODO: deshardcodear el objetivo del juego
     file.write("UP\n")
     file.write("RIGHT\n")
     file.write("DOWN\n")

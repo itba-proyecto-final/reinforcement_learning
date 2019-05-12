@@ -2,14 +2,14 @@ import gym
 import numpy as np
 import gym_chase
 
-from enviroment.q_tools import write_q_table_file
+from enviroment.q_tools import write_q_table_file, test_q_table
 
 env = gym.make('chase-mental-v0')
 LEARNING_RATE = .2
 Y = .3
 
 
-def train_q_algorithm(training_episodes=300, learning_rate=.8, y=.95):
+def train_q_algorithm(training_episodes=1, learning_rate=.8, y=.95):
     """
     Train Q table and return it
     :return: Q Table
@@ -21,7 +21,7 @@ def train_q_algorithm(training_episodes=300, learning_rate=.8, y=.95):
         # Reset environment and get first new observation
         state = env.reset()
         # The Q-Table learning algorithm
-        for j in range(2000):
+        for j in range(200):
             new_state, reward, is_done, action = env.step()
             # Update Q-Table with new knowledge
             Q[state, action] = Q[state, action] + learning_rate * (reward + y * np.max(Q[new_state, :]) - Q[state, action])
@@ -35,5 +35,9 @@ def train_q_algorithm(training_episodes=300, learning_rate=.8, y=.95):
     print("Average amount of steps when training:" + str(num_steps/training_episodes))
     return Q
 
-
+# env = gym.make('chase-v0')
 Q_table = train_q_algorithm(training_episodes=1)
+# test_env = gym.make('chase-v0')
+# test_env.num_rows_cols = 5
+# test_env.goal = (4,4)
+# test_q_table(test_env, Q_table, 2)
