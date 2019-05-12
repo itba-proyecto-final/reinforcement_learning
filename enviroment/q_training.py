@@ -7,6 +7,8 @@ from enviroment.q_tools import write_q_table_file, test_q_table
 env = gym.make('chase-v0')
 LEARNING_RATE = .2
 Y = .3
+CORRECT_REWARD_ACCURACY = 0.7
+env.accuracy = CORRECT_REWARD_ACCURACY
 
 
 def train_q_algorithm(training_episodes=100, learning_rate=.8, y=.95):
