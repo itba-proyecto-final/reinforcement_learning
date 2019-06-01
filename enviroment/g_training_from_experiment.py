@@ -21,19 +21,19 @@ def train_q_algorithm(training_episodes=1, learning_rate=.8, y=.95):
         # Reset environment and get first new observation
         state = env.reset()
         # The Q-Table learning algorithm
-        for j in range(200):
+        is_done = False
+        while not is_done:
             new_state, reward, is_done, action = env.step()
             # Update Q-Table with new knowledge
             Q[state, action] = Q[state, action] + learning_rate * (reward + y * np.max(Q[new_state, :]) - Q[state, action])
             state = new_state
-            if is_done:
-                num_steps += env.number_of_steps
-                break
+        num_steps += env.number_of_steps
     write_q_table_file(Q)
     print("Final Q-Table Values")
     print(Q)
     print("Average amount of steps when training:" + str(num_steps/training_episodes))
     return Q
+
 
 # env = gym.make('chase-v0')
 Q_table = train_q_algorithm(training_episodes=1)
