@@ -1,10 +1,18 @@
 import gym
 import numpy as np
 import gym_chase
-
+from argparse import ArgumentParser
 from enviroment.q_tools import write_q_table_file, test_q_table
 
+
+parser = ArgumentParser()
+parser.add_argument("-f", "--file", dest="filename", help="File containing game states", metavar="FILE")
+parser.add_argument("-q", "--quiet", dest="verbose", default=True, help="don't print status messages to stdout")
+args = parser.parse_args()
+game_file = args.filename
 env = gym.make('chase-mental-v0')
+env.set_game_file(game_file)
+
 LEARNING_RATE = .2
 Y = .3
 

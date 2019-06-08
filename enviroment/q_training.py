@@ -1,16 +1,21 @@
 import gym
 import numpy as np
+# noinspection PyUnresolvedReferences
 import gym_chase
-
 from enviroment.q_tools import write_q_table_file, test_q_table
 
+
+
+
 env = gym.make('chase-v0')
+
 LEARNING_RATE = .2
 Y = .3
 CORRECT_REWARD_ACCURACY = 0.6
 env.accuracy = CORRECT_REWARD_ACCURACY
 env.num_row_cols = 10
 env.goal = (6,4)
+
 
 def train_q_algorithm(training_episodes=100, learning_rate=.8, y=.95):
     """
