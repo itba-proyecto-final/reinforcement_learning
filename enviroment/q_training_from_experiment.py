@@ -36,7 +36,7 @@ def train_q_algorithm(training_episodes=1, learning_rate=.8, y=.95):
 
 
 # env = gym.make('chase-v0')
-Q_table = train_q_algorithm(training_episodes=1)
+Q_table = train_q_algorithm(training_episodes=2)
 # test_env = gym.make('chase-v0')
 # test_env.num_rows_cols = 5
 # test_env.goal = (4,4)
