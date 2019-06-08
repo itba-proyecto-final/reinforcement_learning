@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 
 
@@ -35,15 +37,29 @@ def test_q_table(env, q_table, testing_episodes=50):
     all_steps = list()
     for i in range(testing_episodes):
         state = env.reset()
-        for j in range(100):
+        is_done = False
+        while not is_done:
             sorted_actions = reversed(np.argsort(q_table[state, :]))
+            # action = list(sorted_actions)[0]
+            max_value = 0
+            max_values = list()
             for a in sorted_actions:  # Check that we are using a valid action
                 if env.is_valid_action(a):
-                    action = a
-                    break
+                    action_value = q_table[state,:][a]
+                    if action_value > max_value:
+                        max_value = action_value
+                        max_values = list()
+                        max_values.append(a)
+                    elif action_value == max_value:
+                        max_values.append(a)
+            action = random.choice(max_values)
             state_new, reward, is_done, _ = env.step(action)
             state = state_new
+            env.render()
+            print("-")
             if is_done:
+                print("-----")
+                print("NUM STEPS " + str(env.number_of_steps))
                 num_steps += env.number_of_steps
                 all_steps.append(env.number_of_steps)
                 break

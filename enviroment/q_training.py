@@ -4,9 +4,6 @@ import numpy as np
 import gym_chase
 from enviroment.q_tools import write_q_table_file, test_q_table
 
-
-
-
 env = gym.make('chase-v0')
 
 LEARNING_RATE = .2

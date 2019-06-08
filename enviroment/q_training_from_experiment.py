@@ -8,16 +8,16 @@ from enviroment.q_tools import write_q_table_file, test_q_table
 parser = ArgumentParser()
 parser.add_argument("-f", "--file", dest="filename", help="File containing game states", metavar="FILE")
 parser.add_argument("-q", "--quiet", dest="verbose", default=True, help="don't print status messages to stdout")
+
 args = parser.parse_args()
 game_file = args.filename
-env = gym.make('chase-mental-v0')
-env.set_game_file(game_file)
+
 
 LEARNING_RATE = .2
 Y = .3
 
 
-def train_q_algorithm(training_episodes=1, learning_rate=.8, y=.95):
+def train_q_algorithm(env, training_episodes=1, learning_rate=.8, y=.95):
     """
     Train Q table and return it
     :return: Q Table
@@ -43,9 +43,10 @@ def train_q_algorithm(training_episodes=1, learning_rate=.8, y=.95):
     return Q
 
 
-# env = gym.make('chase-v0')
-Q_table = train_q_algorithm(training_episodes=2)
-# test_env = gym.make('chase-v0')
-# test_env.num_rows_cols = 5
-# test_env.goal = (4,4)
-# test_q_table(test_env, Q_table, 2)
+env = gym.make('chase-mental-v0')
+env.set_game_file(game_file)
+Q_table = train_q_algorithm(env)
+test_env = gym.make('chase-v0')
+test_env.set_num_row_cols(5)
+test_env.goal = (4,4)
+test_q_table(env=test_env, q_table=Q_table)
