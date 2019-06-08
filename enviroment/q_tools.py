@@ -26,8 +26,13 @@ def write_q_table_file(q_table, q_file="Q_Table.txt"):
 def test_q_table(env, q_table, testing_episodes=50):
     """
     Test Q Table, print the average amount of steps
+    :param env: Environment which will be tested
+    :param q_table: Q table which will be used to do testing
+    :param testing_episodes: Amount of episodes
+    :return: List of amount of steps for each episode, avg amount of steps per episode
     """
     num_steps = 0
+    all_steps = list()
     for i in range(testing_episodes):
         state = env.reset()
         for j in range(100):
@@ -40,6 +45,9 @@ def test_q_table(env, q_table, testing_episodes=50):
             state = state_new
             if is_done:
                 num_steps += env.number_of_steps
+                all_steps.append(env.number_of_steps)
                 break
-    print("Average amount of steps when testing: " + str(num_steps/testing_episodes))
+    average_steps = num_steps/testing_episodes
+    print("Average amount of steps when testing: " + str(average_steps))
+    return all_steps, average_steps
 
