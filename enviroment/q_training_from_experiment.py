@@ -5,25 +5,16 @@ from argparse import ArgumentParser
 from enviroment.q_tools import write_q_table_file, test_q_table
 
 
-parser = ArgumentParser()
-parser.add_argument("-f", "--file", dest="filename", help="File containing game states", metavar="FILE")
-parser.add_argument("-q", "--quiet", dest="verbose", default=True, help="don't print status messages to stdout")
-
-args = parser.parse_args()
-game_file = args.filename
-
-
-LEARNING_RATE = .2
-Y = .3
-
-
-def train_q_algorithm(env, training_episodes=1, learning_rate=.8, y=.95):
+def train_q_algorithm(env, training_episodes=1, learning_rate=.8, y=.95, q_table=None):
     """
     Train Q table and return it
     :return: Q Table
     """
     # Initialize Q-table with all zeros
-    Q = np.zeros([env.observation_space, env.action_space])
+    if q_table is None:
+        Q = np.zeros([env.observation_space, env.action_space])
+    else:
+        Q = q_table
     num_steps = 0
     for i in range(training_episodes):
         # Reset environment and get first new observation
@@ -43,10 +34,18 @@ def train_q_algorithm(env, training_episodes=1, learning_rate=.8, y=.95):
     return Q
 
 
-env = gym.make('chase-mental-v0')
-env.set_game_file(game_file)
-Q_table = train_q_algorithm(env)
-test_env = gym.make('chase-v0')
-test_env.set_num_row_cols(5)
-test_env.goal = (4,4)
-test_q_table(env=test_env, q_table=Q_table)
+if __name__ == "__main__":
+    parser = ArgumentParser()
+    parser.add_argument("-f", "--file", dest="filename", help="File containing game states", metavar="FILE")
+    parser.add_argument("-q", "--quiet", dest="verbose", default=True, help="don't print status messages to stdout")
+
+    args = parser.parse_args()
+    game_file = args.filename
+
+    env = gym.make('chase-mental-v0')
+    env.set_game_file(game_file)
+    Q_table = train_q_algorithm(env)
+    test_env = gym.make('chase-v0')
+    test_env.set_num_row_cols(5)
+    test_env.goal = (4,4)
+    test_q_table(env=test_env, q_table=Q_table)
