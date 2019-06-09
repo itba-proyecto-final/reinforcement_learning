@@ -1,5 +1,5 @@
 import random
-
+import math
 import numpy as np
 
 
@@ -63,7 +63,7 @@ def test_q_table(env, q_table, testing_episodes=50):
         while not is_done:
             sorted_actions = reversed(np.argsort(q_table[state, :]))
             # action = list(sorted_actions)[0]
-            max_value = 0
+            max_value = - math.inf
             max_values = list()
             for a in sorted_actions:  # Check that we are using a valid action
                 if env.is_valid_action(a):
