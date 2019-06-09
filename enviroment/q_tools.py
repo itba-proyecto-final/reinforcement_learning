@@ -89,4 +89,3 @@ def test_q_table(env, q_table, testing_episodes=50):
     print("Average amount of steps when testing: " + str(average_steps))
     return all_steps, average_steps
 
-read_q_table_file()
