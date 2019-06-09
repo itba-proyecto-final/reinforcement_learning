@@ -29,8 +29,11 @@ if __name__ == "__main__":
         all_steps, average_steps = test_q_table(env=test_env, q_table=q_table)
         steps.append(average_steps)
 
-    plt.plot(range(len(steps)), steps)
+    experiments_series = range(1, len(steps)+1)
+
+    plt.plot(experiments_series, steps)
     plt.title("Average steps to reach goal", fontsize=19)
     plt.xlabel("Experiments", fontsize=10)
     plt.ylabel("Average steps", fontsize=10)
+    plt.xticks(range(1, len(steps)+1))
     plt.show()
