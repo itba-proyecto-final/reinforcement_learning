@@ -25,6 +25,28 @@ def write_q_table_file(q_table, q_file="Q_Table.txt"):
     file.close()
 
 
+def read_q_table_file(q_file="Q_Table.txt"):
+    """
+    Read Q table from file and return a matrix containing the values
+    :param q_file: File from where to read q table values, first line has the q table dimensions, followed by the
+    possible states, then the actions, and then all the values ordered by rows from left to right
+    :return: Q table, two-dimensional list
+    """
+    file = open(q_file, "r")
+    lines = file.readlines()
+    rows_str, cols_str = lines[0].split("x")
+    rows = int(rows_str)
+    cols = int(cols_str)
+    q_value_list = lines[rows+cols+1:]
+    q_table = [[0 for _ in range(cols)] for _ in range(rows)]
+    list_index = 0
+    for i in range(rows):
+        for j in range(cols):
+            q_table[i][j] = q_value_list[list_index]
+            list_index += 1
+    return q_table
+
+
 def test_q_table(env, q_table, testing_episodes=50):
     """
     Test Q Table, print the average amount of steps
