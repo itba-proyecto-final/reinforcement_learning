@@ -77,10 +77,7 @@ def test_q_table(env, q_table, testing_episodes=50):
             action = random.choice(max_values)
             state_new, reward, is_done, _ = env.step(action)
             state = state_new
-            env.render()
-            print("-")
             if is_done:
-                print("-----")
                 print("NUM STEPS " + str(env.number_of_steps))
                 num_steps += env.number_of_steps
                 all_steps.append(env.number_of_steps)
