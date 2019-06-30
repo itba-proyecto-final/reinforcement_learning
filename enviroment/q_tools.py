@@ -60,7 +60,8 @@ def test_q_table(env, q_table, testing_episodes=50):
     for i in range(testing_episodes):
         state = env.reset()
         is_done = False
-        while not is_done:
+        iterations = 0
+        while not is_done and iterations < 1000:
             sorted_actions = reversed(np.argsort(q_table[state, :]))
             # action = list(sorted_actions)[0]
             max_value = - math.inf
@@ -77,6 +78,7 @@ def test_q_table(env, q_table, testing_episodes=50):
             action = random.choice(max_values)
             state_new, reward, is_done, _ = env.step(action)
             state = state_new
+            iterations += 1
             if is_done:
                 print("NUM STEPS " + str(env.number_of_steps))
                 num_steps += env.number_of_steps
