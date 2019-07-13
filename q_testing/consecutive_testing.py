@@ -7,6 +7,9 @@ from argparse import ArgumentParser
 from enviroment import q_training_from_experiment
 from enviroment.q_tools import test_q_table
 
+'''
+Use several experiment to train a Q-Table
+'''
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument('--files', dest="filenames", nargs='+', help='<Required> Files to train the QTable',
@@ -15,13 +18,11 @@ if __name__ == "__main__":
 
     experiments = args.filenames
     steps = []
-    q_table = None
+    q_table = np.zeros([env.observation_space, env.action_space])
 
     for experiment in experiments:
         env = gym.make('chase-mental-v0')
         env.set_game_file(experiment)
-        if q_table is None:
-            q_table = np.zeros([env.observation_space, env.action_space])
         q_table = q_training_from_experiment.train_q_algorithm(env, training_episodes=3, q_table=q_table)
         test_env = gym.make('chase-v0')
         test_env.set_num_row_cols(5)
