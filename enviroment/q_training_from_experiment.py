@@ -8,7 +8,7 @@ from enviroment.q_tools import write_q_table_file, test_q_table
 def train_q_algorithm(gym_env, training_episodes, learning_rate=.8, y=.95, q_table=None):
     """
     Train Q table and return it
-    :return: Q Table
+    :return: Q Table, average amount of steps when training
     """
     # Initialize Q-table with all zeros
     if q_table is None:
@@ -16,12 +16,13 @@ def train_q_algorithm(gym_env, training_episodes, learning_rate=.8, y=.95, q_tab
     num_steps = 0
     steps_per_iteration = list()
     for i in range(training_episodes):
-        print(i)
         # Reset environment and get first new observation
         state = gym_env.reset()
         # The Q-Table learning algorithm
         is_done = False
+        aux = 0
         while not is_done:
+            aux += 1
             new_state, reward, is_done, action = gym_env.step()
             # Update Q-Table with new knowledge
             q_table[state, action] = q_table[state, action] + learning_rate * (reward + y * np.max(q_table[new_state, :]) - q_table[state, action])
@@ -29,12 +30,8 @@ def train_q_algorithm(gym_env, training_episodes, learning_rate=.8, y=.95, q_tab
         num_steps += gym_env.number_of_steps
         steps_per_iteration.append(gym_env.number_of_steps)
         if i+1 != training_episodes:
-            env.next_experience()
+            gym_env.next_experience()
     write_q_table_file(q_table)
-    print(steps_per_iteration)
-    print("Final Q-Table Values")
-    print(q_table)
-    print("Average amount of steps when training:" + str(num_steps/training_episodes))
     return q_table
 
 
@@ -54,5 +51,5 @@ if __name__ == "__main__":
 
     test_env = gym.make('chase-v0')
     test_env.set_num_row_cols(5)
-    test_env.goal = (4,4)
-    test_q_table(env=test_env, q_table=Q_table)
+    test_env.goal = (4, 4)
+    all_steps, avg_steps = test_q_table(env=test_env, q_table=Q_table)

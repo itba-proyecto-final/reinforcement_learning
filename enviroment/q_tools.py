@@ -80,11 +80,9 @@ def test_q_table(env, q_table, testing_episodes=50):
             state = state_new
             iterations += 1
             if is_done:
-                print("NUM STEPS " + str(env.number_of_steps))
                 num_steps += env.number_of_steps
                 all_steps.append(env.number_of_steps)
                 break
     average_steps = num_steps/testing_episodes
-    print("Average amount of steps when testing: " + str(average_steps))
     return all_steps, average_steps
 
