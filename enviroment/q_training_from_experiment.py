@@ -29,8 +29,6 @@ def train_q_algorithm(gym_env, training_episodes, learning_rate=.8, y=.95, q_tab
             state = new_state
         num_steps += gym_env.number_of_steps
         steps_per_iteration.append(gym_env.number_of_steps)
-        if i+1 != training_episodes:
-            gym_env.next_experience()
     write_q_table_file(q_table)
     return q_table
 
