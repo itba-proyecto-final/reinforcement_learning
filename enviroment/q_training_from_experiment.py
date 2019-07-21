@@ -20,9 +20,7 @@ def train_q_algorithm(gym_env, training_episodes, learning_rate=.8, y=.95, q_tab
         state = gym_env.reset()
         # The Q-Table learning algorithm
         is_done = False
-        aux = 0
         while not is_done:
-            aux += 1
             new_state, reward, is_done, action = gym_env.step()
             # Update Q-Table with new knowledge
             q_table[state, action] = q_table[state, action] + learning_rate * (reward + y * np.max(q_table[new_state, :]) - q_table[state, action])
