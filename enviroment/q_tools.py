@@ -66,16 +66,22 @@ def test_q_table(env, q_table, testing_episodes=50):
             # action = list(sorted_actions)[0]
             max_value = - math.inf
             max_values = list()
+            valid_actions = list()
             for a in sorted_actions:  # Check that we are using a valid action
                 if env.is_valid_action(a):
-                    action_value = q_table[state,:][a]
+                    action_value = q_table[state, :][a]
+                    valid_actions.append(a)
                     if action_value > max_value:
                         max_value = action_value
                         max_values = list()
                         max_values.append(a)
                     elif action_value == max_value:
                         max_values.append(a)
-            action = random.choice(max_values)
+            rand = random.uniform(0, 1)
+            if rand <= 0.05:
+                action = random.choice(valid_actions)
+            else:
+                action = random.choice(max_values)
             state_new, reward, is_done, _ = env.step(action)
             state = state_new
             iterations += 1
