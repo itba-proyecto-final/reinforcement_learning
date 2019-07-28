@@ -44,7 +44,7 @@ def read_q_table_file(q_file="Q_Table.txt"):
         for j in range(cols):
             q_table[i][j] = q_value_list[list_index]
             list_index += 1
-    return q_table
+    return np.asarray(q_table).astype(np.float)
 
 
 def test_q_table(env, q_table, testing_episodes=50):
