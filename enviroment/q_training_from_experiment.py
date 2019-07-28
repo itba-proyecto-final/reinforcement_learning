@@ -2,7 +2,7 @@ import gym
 import numpy as np
 import gym_chase
 from argparse import ArgumentParser
-from enviroment.q_tools import write_q_table_file, test_q_table
+from enviroment.q_tools import write_q_table_file, test_q_table, read_q_table_file
 
 
 def train_q_algorithm(gym_env, training_episodes, learning_rate=.8, y=.95, q_table=None):
@@ -20,6 +20,7 @@ def train_q_algorithm(gym_env, training_episodes, learning_rate=.8, y=.95, q_tab
         state = gym_env.reset()
         # The Q-Table learning algorithm
         is_done = False
+        print("training episode: ", i)
         while not is_done:
             new_state, reward, is_done, action = gym_env.step()
             # Update Q-Table with new knowledge
@@ -35,12 +36,17 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-q", "--quiet", dest="verbose", default=True, help="Don't print status messages to stdout")
     parser.add_argument('-f', '--files', dest="filenames", nargs='+', help='List of files that contain game information', required=True, type=str)
+    parser.add_argument('-t', '--table', dest="qtable", help='File that contains Q Table', type=str)
 
     args = parser.parse_args()
     game_files = args.filenames
 
+    if args.qtable is None:
+        Q_table = None
+    else:
+        Q_table = read_q_table_file(args.qtable)
+
     env = gym.make('chase-mental-v0')
-    Q_table = None
     for game_file in game_files:  # Use all the game files to train
         env.set_game_file(game_file)
         Q_table = train_q_algorithm(env, training_episodes=env.amount_of_experiences, q_table=Q_table)
@@ -49,3 +55,4 @@ if __name__ == "__main__":
     test_env.set_num_row_cols(5)
     test_env.goal = (4, 4)
     all_steps, avg_steps = test_q_table(env=test_env, q_table=Q_table)
+    print("All steps: ", all_steps, ", Avg steps: ", avg_steps)
